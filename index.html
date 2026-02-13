@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Date Converter</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data.min.js"></script>
+
+<!-- Searchable Dropdown Library -->
+<link href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.card {
+    background: white;
+    width: 90%;
+    max-width: 750px;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+}
+
+h2 {
+    text-align: center;
+    margin-top: 0;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+}
+
+textarea, select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 18px;
+    font-size: 14px;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.output-box {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+    font-family: monospace;
+    min-height: 50px;
+    word-break: break-all;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 12px;
+    color: #666;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>🌍 Advanced Date Converter</h2>
+
+<label>Input Date (any format)</label>
+<textarea id="inputDate" placeholder="Example: 2024-07-08 16:38:10"></textarea>
+
+<label>Input Timezone</label>
+<select id="inputTimezone"></select>
+
+<label>Output Timezone</label>
+<select id="outputTimezone"></select>
+
+<label>Output Format</label>
+<select id="outputFormat">
+    <option value="YYYY-MM-DD HH:mm:ss">ISO 24H (2024-07-08 16:38:10)</option>
+    <option value="MM-DD-YYYY hh:mm:ss A z">US Format (07-08-2024 04:38:10 PM CET)</option>
+    <option value="DD/MM/YYYY HH:mm">EU Format (08/07/2024 16:38)</option>
+    <option value="MMM D, YYYY hh:mm:ss A">Readable (Jul 8, 2024 04:38:10 PM)</option>
+    <option value="dddd, MMMM D YYYY HH:mm:ss z">Full Format (Monday, July 8 2024 16:38:10 CET)</option>
+    <option value="X">Unix Timestamp (Seconds)</option>
+    <option value="x">Unix Timestamp (Milliseconds)</option>
+</select>
+
+<button onclick="convertDate()">Convert</button>
+
+<br><br>
+
+<label>Converted Result</label>
+<div class="output-box" id="outputDate"></div>
+
+<div class="footer">
+    Created by <strong>mounirox-</strong>
+</div>
+
+</div>
+
+<script>
+
+function loadTimezones(){
+    const zones = moment.tz.names();
+    const input = document.getElementById("inputTimezone");
+    const output = document.getElementById("outputTimezone");
+
+    zones.forEach(z=>{
+        input.innerHTML += `<option value="${z}">${z}</option>`;
+        output.innerHTML += `<option value="${z}">${z}</option>`;
+    });
+
+    input.value="UTC";
+    output.value="Africa/Algiers";
+
+    // Make dropdown searchable
+    new Choices('#inputTimezone', { searchEnabled: true, itemSelectText: '' });
+    new Choices('#outputTimezone', { searchEnabled: true, itemSelectText: '' });
+}
+
+function convertDate(){
+
+    const inputDate = document.getElementById("inputDate").value.trim();
+    const inputTZ = document.getElementById("inputTimezone").value;
+    const outputTZ = document.getElementById("outputTimezone").value;
+    const format = document.getElementById("outputFormat").value;
+
+    if(!inputDate){
+        alert("Please enter a date.");
+        return;
+    }
+
+    let m = moment.tz(inputDate, inputTZ);
+
+    if(!m.isValid()){
+        alert("Invalid date format.");
+        return;
+    }
+
+    let result = m.clone().tz(outputTZ).format(format);
+
+    document.getElementById("outputDate").innerText = result;
+}
+
+loadTimezones();
+
+</script>
+
+</body>
+</html>
