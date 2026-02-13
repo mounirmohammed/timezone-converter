@@ -36,11 +36,6 @@ A modern, lightweight web-based timezone and date format converter that supports
 
 Advanced web-based timezone converter supporting all global timezones, flexible date formats, and fast browser-based conversion for developers, analysts, and IT professionals.
 
----
-
-📄 License
-
-MIT License
 
 ---
 
